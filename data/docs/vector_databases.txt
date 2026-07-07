@@ -1,0 +1,13 @@
+Vector Databases and Approximate Nearest Neighbor Search
+
+Vector databases store high-dimensional embedding vectors and support similarity search over them. The fundamental operation is nearest neighbor search: given a query vector, find the stored vectors with the highest similarity, typically measured by cosine similarity, dot product, or Euclidean distance.
+
+Exact search using a flat index compares the query against every stored vector. This is accurate but scales linearly with collection size, becoming prohibitive beyond a few million vectors. Approximate Nearest Neighbor (ANN) algorithms trade a small amount of recall for large speedups.
+
+HNSW (Hierarchical Navigable Small World) builds a multi-layer proximity graph. Search starts at the top layer, greedily navigating toward the query, and descends layer by layer. HNSW offers excellent recall-latency trade-offs and is the default in many systems including Qdrant, Weaviate, and pgvector's HNSW index type.
+
+IVF (Inverted File) indexes partition the vector space into clusters using k-means. At query time only the closest clusters are scanned, controlled by the nprobe parameter. IVF can be combined with Product Quantization (PQ), which compresses vectors by splitting them into subvectors and quantizing each independently, dramatically reducing memory usage at some cost to accuracy.
+
+FAISS, developed by Meta AI Research, is a library (not a full database) providing flat, IVF, HNSW, and PQ indexes with highly optimized CPU and GPU implementations. It is widely used for research prototypes and production retrieval systems where the index can be managed in application code.
+
+Embedding models map text into the vector space. Sentence-transformer models such as all-MiniLM-L6-v2 produce 384-dimensional embeddings and run efficiently on CPU, while larger models produce higher-dimensional embeddings with better retrieval quality at higher computational cost. Normalizing embeddings to unit length makes inner product equivalent to cosine similarity.

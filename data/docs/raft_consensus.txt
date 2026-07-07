@@ -1,0 +1,11 @@
+Raft Consensus Algorithm — Overview
+
+Raft is a consensus algorithm designed as a more understandable alternative to Paxos. It decomposes the consensus problem into three relatively independent subproblems: leader election, log replication, and safety.
+
+Leader Election: Raft uses randomized election timeouts to elect a single leader per term. Each server begins as a follower. If a follower receives no communication from a leader within its election timeout (typically randomized between 150 and 300 milliseconds), it transitions to the candidate state, increments the current term, votes for itself, and issues RequestVote RPCs to all other servers. A candidate becomes leader if it receives votes from a majority of the cluster. The randomized timeout mechanism makes split votes rare and resolves them quickly when they occur.
+
+Terms: Time in Raft is divided into terms of arbitrary length, numbered with consecutive integers. Each term begins with an election. Terms act as a logical clock, allowing servers to detect obsolete information such as stale leaders. Every server stores a current term number which increases monotonically over time.
+
+Log Replication: Once a leader is elected, it services client requests. Each client request contains a command to be executed by the replicated state machines. The leader appends the command to its log as a new entry, then issues AppendEntries RPCs in parallel to each of the other servers to replicate the entry. When the entry has been safely replicated on a majority of servers, the leader applies the entry to its state machine and returns the result to the client. An entry is called committed once it is safe to apply to state machines.
+
+Safety: The Election Safety property guarantees at most one leader can be elected in a given term. The Leader Append-Only property states a leader never overwrites or deletes entries in its log; it only appends new entries. The Log Matching property guarantees that if two logs contain an entry with the same index and term, then the logs are identical in all entries up through that index. The Leader Completeness property guarantees that if a log entry is committed in a given term, then that entry will be present in the logs of the leaders for all higher-numbered terms.

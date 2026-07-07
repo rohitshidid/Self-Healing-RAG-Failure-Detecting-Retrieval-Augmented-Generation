@@ -1,0 +1,9 @@
+[theme]
+base = "dark"
+primaryColor = "#ff4b6e"
+
+[server]
+headless = true
+# Streamlit's watcher tries to import every lazy transformers submodule (incl.
+# vision ones needing torchvision) — disable to stop the traceback spam.
+fileWatcherType = "none"

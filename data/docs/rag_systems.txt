@@ -1,0 +1,13 @@
+Retrieval-Augmented Generation (RAG) Systems
+
+Retrieval-Augmented Generation combines a retrieval system with a large language model. Instead of relying solely on parametric knowledge learned during training, the model receives relevant documents retrieved at inference time, grounding its output in external, updatable knowledge.
+
+A standard RAG pipeline has three stages. Ingestion: documents are split into chunks, embedded with an encoder model, and stored in a vector index. Retrieval: the user query is embedded with the same encoder, and the most similar chunks are fetched. Generation: retrieved chunks are inserted into the LLM prompt as context, and the model generates an answer conditioned on them.
+
+Chunking strategy significantly affects retrieval quality. Chunks that are too small lose surrounding context; chunks that are too large dilute the embedding signal and waste prompt tokens. Common practice uses 200 to 800 token chunks with 10 to 20 percent overlap, often snapped to sentence or paragraph boundaries.
+
+Hallucination in RAG occurs when the generated answer contains claims not supported by the retrieved context. Mitigations include instructing the model to answer only from context, citing sources inline, and post-hoc verification. Natural Language Inference (NLI) models can verify groundedness: each answer sentence is treated as a hypothesis and each retrieved chunk as a premise, and the answer is considered grounded only if every sentence is entailed by at least one chunk.
+
+Query transformation techniques improve retrieval when the raw user query matches poorly against the corpus. Query rewriting uses an LLM to rephrase the question with vocabulary closer to the target documents. HyDE (Hypothetical Document Embeddings) generates a hypothetical answer to the question and embeds that instead of the question, exploiting the observation that answer-to-answer similarity is often higher than question-to-answer similarity. Multi-query retrieval issues several reformulations in parallel and merges the results.
+
+Evaluation of RAG systems typically measures retrieval quality (recall at k, mean reciprocal rank), answer faithfulness (fraction of claims supported by retrieved evidence), and answer relevance. Frameworks such as RAGAS automate these measurements using LLM judges.

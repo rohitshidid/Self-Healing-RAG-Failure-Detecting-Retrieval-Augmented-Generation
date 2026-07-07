@@ -1,0 +1,22 @@
+[
+  {"question": "How does Raft elect a leader?", "expect_answer": true},
+  {"question": "What are Raft terms used for?", "expect_answer": true},
+  {"question": "How does log replication work in Raft?", "expect_answer": true},
+  {"question": "What is joint consensus in Raft?", "expect_answer": true},
+  {"question": "How does Raft handle log compaction?", "expect_answer": true},
+  {"question": "why does my cluster keep picking a new boss all the time", "expect_answer": true},
+  {"question": "whats the deal with the log getting too big", "expect_answer": true},
+  {"question": "how do i stop the same command running twice after a crash", "expect_answer": true},
+  {"question": "What is HNSW and how does it search?", "expect_answer": true},
+  {"question": "What does the nprobe parameter control?", "expect_answer": true},
+  {"question": "how do those vector thingies get squished to save memory", "expect_answer": true},
+  {"question": "What is HyDE and why does it help retrieval?", "expect_answer": true},
+  {"question": "How can NLI models catch hallucinations in RAG answers?", "expect_answer": true},
+  {"question": "what chunk size should i use so my search doesnt suck", "expect_answer": true},
+  {"question": "Compare how HNSW searches with how Raft takes snapshots", "expect_answer": true},
+  {"question": "What is the capital of France?", "expect_answer": false},
+  {"question": "Who won the 2022 World Cup?", "expect_answer": false},
+  {"question": "How does Paxos differ from Viewstamped Replication in message complexity?", "expect_answer": false},
+  {"question": "What is the airspeed velocity of an unladen swallow?", "expect_answer": false},
+  {"question": "How does the leader know an entry is committed?", "expect_answer": true}
+]
