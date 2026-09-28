@@ -5,7 +5,9 @@ import os
 EMBEDDING_MODEL = "sentence-transformers/all-MiniLM-L6-v2"
 NLI_MODEL = "cross-encoder/nli-deberta-v3-base"
 RELEVANCE_MODEL = "cross-encoder/ms-marco-MiniLM-L-6-v2"
-GROQ_MODEL = os.environ.get("GROQ_MODEL", "llama-3.3-70b-versatile")
+GROQ_MODEL = os.environ.get("GROQ_MODEL", "openai/gpt-oss-120b")
+# Tried in order if the primary model is retired or not available on the key's tier
+GROQ_FALLBACK_MODELS = ["openai/gpt-oss-120b", "openai/gpt-oss-20b", "llama-3.1-8b-instant"]
 
 # --- Retrieval ---
 CHUNK_SIZE = 500            # characters per chunk

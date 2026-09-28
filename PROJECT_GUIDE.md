@@ -133,7 +133,7 @@ Global cap: **3 healing attempts per query** (`MAX_HEALING_ATTEMPTS`) — guaran
 
 ### 4.5 Generation (`src/generation.py`)
 
-Groq API, `llama-3.3-70b-versatile`, temperature 0.2 for answers. The system prompt forbids outside knowledge, mandates the exact refusal string, and — importantly — **forbids hedging ("may/might/could") and meta-commentary about the context**. This isn't stylistic: hedged or meta sentences are unverifiable as NLI hypotheses, so the generator must produce claims the verifier can actually check. *Generator and verifier must be aligned.* Rate limits (429) are retried with exponential backoff (5s/10s/20s).
+Groq API, `openai/gpt-oss-120b` (auto-falls back to `gpt-oss-20b` / `llama-3.1-8b-instant` if a model is retired), temperature 0.2 for answers. The system prompt forbids outside knowledge, mandates the exact refusal string, and — importantly — **forbids hedging ("may/might/could") and meta-commentary about the context**. This isn't stylistic: hedged or meta sentences are unverifiable as NLI hypotheses, so the generator must produce claims the verifier can actually check. *Generator and verifier must be aligned.* Rate limits (429) are retried with exponential backoff (5s/10s/20s).
 
 ### 4.6 Orchestration (`src/pipeline.py`)
 
@@ -149,7 +149,7 @@ Groq API, `llama-3.3-70b-versatile`, temperature 0.2 for answers. The system pro
 | Embeddings | **all-MiniLM-L6-v2** | 384-dim, fast on CPU, no API cost |
 | Relevance check | **ms-marco-MiniLM-L-6-v2** cross-encoder | Purpose-trained for query–passage relevance; tiny (~80 MB) |
 | Hallucination check | **nli-deberta-v3-base** cross-encoder | Purpose-trained NLI (entailment); local, no API cost |
-| LLM | **Groq API**, llama-3.3-70b | Free tier, very fast inference (good for live demos) |
+| LLM | **Groq API**, gpt-oss-120b | Free tier, very fast inference (good for live demos) |
 | UI | **Streamlit** | Fastest path to a clean demo UI |
 | Hosting | **Hugging Face Spaces** (free CPU) | Permanent public URL, no credit card, never expires |
 | Testing | **pytest** + deterministic fakes | Every failure→healing route testable offline in <1s |

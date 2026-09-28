@@ -2,7 +2,7 @@
 import os
 import time
 
-from groq import Groq, RateLimitError
+from groq import Groq, NotFoundError, RateLimitError
 
 from src import config
 
@@ -33,18 +33,35 @@ class LLMClient:
         self.client = Groq(api_key=api_key or os.environ.get("GROQ_API_KEY"))
 
     def _chat(self, system: str, user: str, temperature: float = 0.2) -> str:
+        candidates = [self.model] + [m for m in config.GROQ_FALLBACK_MODELS if m != self.model]
+        for i, model in enumerate(candidates):
+            try:
+                return self._chat_with(model, system, user, temperature)
+            except NotFoundError:
+                # Model retired or not on this key's tier -> try the next one and stick with it
+                if i == len(candidates) - 1:
+                    raise
+                self.model = candidates[i + 1]
+        raise RuntimeError("unreachable")
+
+    def _chat_with(self, model: str, system: str, user: str, temperature: float) -> str:
+        extra = {}
+        if model.startswith("openai/gpt-oss"):
+            # Reasoning model: keep reasoning short so it doesn't eat the output budget
+            extra = {"reasoning_effort": "low", "include_reasoning": False}
         for attempt in range(4):
             try:
                 resp = self.client.chat.completions.create(
-                    model=self.model,
+                    model=model,
                     messages=[
                         {"role": "system", "content": system},
                         {"role": "user", "content": user},
                     ],
                     temperature=temperature,
-                    max_tokens=512,
+                    max_tokens=1024,
+                    **extra,
                 )
-                return resp.choices[0].message.content.strip()
+                return (resp.choices[0].message.content or "").strip()
             except RateLimitError:
                 if attempt == 3:
                     raise

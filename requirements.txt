@@ -1,6 +1,6 @@
 streamlit>=1.35
 sentence-transformers>=3.0
 faiss-cpu>=1.9
-groq>=0.11
+groq>=0.30
 numpy>=1.26
 torch>=2.5
